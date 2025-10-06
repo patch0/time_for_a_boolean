@@ -153,9 +153,41 @@ describe TimeForABoolean do
     end
   end
 
+  describe 'scopes' do
+    it 'does not define the scopes by default' do
+      klass.time_for_a_boolean :attribute
+
+      expect(klass).not_to respond_to :attribute
+      expect(klass).not_to respond_to :not_attribute
+    end
+
+    it 'does not define the scopes if the class does not respond to where' do
+      klass.time_for_a_boolean :attribute, scopes: true
+
+      expect(klass).not_to respond_to :attribute
+      expect(klass).not_to respond_to :not_attribute
+    end
+
+    it 'defines the scopes if the class has a where method' do
+      klass_with_where.time_for_a_boolean :attribute, scopes: true
+
+      expect(klass_with_where).to respond_to :attribute
+      expect(klass_with_where).to respond_to :not_attribute
+    end
+  end
+
   def klass
     @klass ||= Class.new do
       extend TimeForABoolean
+    end
+  end
+
+  def klass_with_where
+    @klass ||= Class.new do
+      extend TimeForABoolean
+
+      def self.where(...)
+      end
     end
   end
 

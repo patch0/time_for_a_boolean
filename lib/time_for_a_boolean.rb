@@ -6,7 +6,7 @@ require "time_for_a_boolean/version"
 require "time_for_a_boolean/railtie"
 
 module TimeForABoolean
-  def time_for_a_boolean(attribute, field=:"#{attribute}_at", scopes: false)
+  def time_for_a_boolean(attribute, field=:"#{attribute}_at", scope: false)
     define_method(attribute) do
       !send(field).nil? && send(field) <= -> { Time.current }.()
     end

@@ -26,14 +26,10 @@ module TimeForABoolean
       send(:"#{attribute}=", true)
     end
 
-    if scopes && respond_to?(:where)
+    if scope && respond_to?(:where)
       singleton_class.instance_eval do
         define_method(:"#{attribute}") do
           where.not("#{field}": nil)
-        end
-
-        define_method(:"not_#{attribute}") do
-          where("#{field}": nil)
         end
       end
     end

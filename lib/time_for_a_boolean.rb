@@ -6,7 +6,7 @@ require "time_for_a_boolean/version"
 require "time_for_a_boolean/railtie"
 
 module TimeForABoolean
-  def time_for_a_boolean(attribute, field=:"#{attribute}_at", scope: false)
+  def time_for_a_boolean(attribute, field=:"#{attribute}_at", scopes: false)
     define_method(attribute) do
       !send(field).nil? && send(field) <= -> { Time.current }.()
     end
@@ -26,10 +26,14 @@ module TimeForABoolean
       send(:"#{attribute}=", true)
     end
 
-    if scope && respond_to?(:where)
+    if scopes && respond_to?(:where)
       singleton_class.instance_eval do
         define_method(:"#{attribute}") do
           where.not("#{field}": nil).where("#{field} <= ?", Time.current)
+        end
+
+        define_method(:"not_#{attribute}") do
+          where("#{field}": nil).or(where("#{field} > ?", Time.current))
         end
       end
     end

@@ -29,11 +29,11 @@ module TimeForABoolean
     if scopes && respond_to?(:where)
       singleton_class.instance_eval do
         define_method(:"#{attribute}") do
-          where.not("#{field}": nil).where("#{field} <= ?", Time.current)
+          where(field => ..Time.current)
         end
 
         define_method(:"not_#{attribute}") do
-          where("#{field}": nil).or(where("#{field} > ?", Time.current))
+          where(field => [nil, Time.current...])
         end
       end
     end

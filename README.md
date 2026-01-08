@@ -110,7 +110,7 @@ end
 
 This will define the following scopes:
 
-| Scope                | Description
-| -------------------- | -----------
+| Scope                | Description |
+| -------------------- | ----------- |
 | `Post.deleted`       | Returns all posts where `deleted_at` is set to a time before `Time.current`
 | `Post.not_deleted`   | Returns all posts where `deleted_at` is unset or in the future

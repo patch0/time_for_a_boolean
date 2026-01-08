@@ -5,21 +5,20 @@ Time for A Boolean
 [![Code Climate](https://codeclimate.com/github/calebthompson/time_for_a_boolean.svg)](https://codeclimate.com/github/calebthompson/time_for_a_boolean)
 [![Coverage Status](https://coveralls.io/repos/calebthompson/time_for_a_boolean/badge.svg)](https://coveralls.io/r/calebthompson/time_for_a_boolean)
 
-
 > Sally: Hey, we need to add a flag to Post
-
-> Jean: What for?
-
+>
+> Jean:  What for?
+>
 > Sally: Well, we want to let users "delete" posts, but not actually lose the
-         data.
-
-> Jean: Sounds reasonable. But what about later, when we have to know _when_ a
-  post was deleted?
-
+>        data.
+>
+> Jean:  Sounds reasonable. But what about later, when we have to know _when_ a
+>        post was deleted?
+>
 > Sally: That's a good point, but if we add a timestamp now we have to write all
-         sorts of methods to keep a nice interface on Post...
-
-> Jean: Time for A Boolean!
+>        sorts of methods to keep a nice interface on Post...
+>
+> Jean:  Time for A Boolean!
 
 Wait, what?
 -----------
@@ -78,8 +77,12 @@ Okay... why?
   useful when writing a report. Define and use `Post.deleted.count` when you
   have Ruby available.
 
-Other Options
+Other options
 -------------
+
+There are some other options you can use when defining the attribute.
+
+### Using a different attribute name
 
 If you have a date or time column that does not follow the `attribute_at` convention,
 you can specify the attribute name:
@@ -91,3 +94,23 @@ end
 ```
 
 This is especially useful when using date only columns.
+
+### Scopes to filter records
+
+[ActiveRecord Scopes](https://guides.rubyonrails.org/active_record_querying.html#scopes) 
+can be used to filter records based on the attribute.  These are not defined by
+default, but can be added by passing the `scopes: true` option:
+
+```ruby
+class Post < ActiveRecord::Base
+  time_for_a_boolean :deleted, scopes: true
+  ...
+end
+```
+
+This will define the following scopes:
+
+| Scope                | Description
+| -------------------- | -----------
+| `Post.deleted`       | Returns all posts where `deleted_at` is set to a time before `Time.current`
+| `Post.not_deleted`   | Returns all posts where `deleted_at` is unset or in the future
